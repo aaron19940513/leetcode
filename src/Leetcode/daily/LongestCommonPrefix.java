@@ -1,4 +1,5 @@
 package Leetcode.daily;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -8,10 +9,13 @@ import org.junit.Test;
  */
 public class LongestCommonPrefix {
     public String longestCommonPrefix(String[] strs) {
-        int minLength = 0;
         String prefix = "";
+        if (strs.length == 0) {
+            return prefix;
+        }
+        int minLength = Integer.MAX_VALUE;
         for (String str : strs) {
-            if (str.length() > minLength) {
+            if (str.length() < minLength) {
                 minLength = str.length();
             }
         }
@@ -31,6 +35,6 @@ public class LongestCommonPrefix {
 
     @Test
     public void test() {
-        Assert.assertEquals("fl", longestCommonPrefix(new String[] {"flower", "flow", "flight"}));
+        Assert.assertEquals("fl", longestCommonPrefix(new String[]{"flower", "flow", "flight"}));
     }
 }
