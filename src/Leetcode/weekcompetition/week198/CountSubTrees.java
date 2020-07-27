@@ -24,28 +24,37 @@ public class CountSubTrees {
         }
         for (int[] edge : edges) {
             lists.get(edge[0]).add(edge[1]);
+            lists.get(edge[1]).add(edge[0]);
         }
         int[] ans = new int[n];
-        dfs(' ', 0, lists, labels, ans);
-
+        dfs(0, lists, labels, ans);
         return ans;
     }
 
-    private int dfs(char parentChar, Integer index, List<List<Integer>> lists, String labels, int[] ans) {
+    private int[] dfs(Integer index, List<List<Integer>> lists, String labels, int[] ans) {
+        int[] temp = new int[26];
         ans[index] = 1;
+        temp[labels.charAt(index) - 'a'] = 1;
         for (Integer integer : lists.get(index)) {
-            ans[index] += dfs(labels.charAt(index), integer, lists, labels, ans);
+            if (ans[integer] == 0) {
+                int[] arr = dfs(integer, lists, labels, ans);
+                for (int i = 0; i < 26; i++) {
+                    temp[i] += arr[i];
+                }
+            }
         }
-
-        return parentChar == labels.charAt(index) ? ans[index] : 0;
+        ans[index] = temp[labels.charAt(index) - 'a'];
+        return temp;
     }
 
     @Test
     public void test() {
-        Assert.assertArrayEquals(countSubTrees(7, new int[][]{{0, 1}, {0, 2}, {1, 4}, {1, 5}, {2, 3}, {2, 6}}, "abaedcd"), new int[]{2, 1, 1, 1, 1, 1, 1});
-        Assert.assertArrayEquals(countSubTrees(4, new int[][]{{0, 1}, {1, 2}, {0, 3}}, "bbbb"), new int[]{4, 2, 1, 1});
-        Assert.assertArrayEquals(countSubTrees(5, new int[][]{{0, 1}, {0, 2}, {1, 3}, {0, 4}}, "aabab"), new int[]{3, 2, 1, 1, 1});
-        Assert.assertArrayEquals(countSubTrees(6, new int[][]{{0, 1}, {0, 2}, {1, 3}, {3, 4}, {4, 5}}, "cbabaa"), new int[]{1, 2, 1, 1, 2, 1});
-        Assert.assertArrayEquals(countSubTrees(7, new int[][]{{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}}, "aaabaaa"), new int[]{6, 5, 4, 1, 3, 2, 1});
+        Assert.assertArrayEquals(countSubTrees(7, new int[][] {{0, 1}, {0, 2}, {1, 4}, {1, 5}, {2, 3}, {2, 6}}, "abaedcd"), new int[] {2, 1, 1, 1, 1, 1, 1});
+        Assert.assertArrayEquals(countSubTrees(4, new int[][] {{0, 1}, {1, 2}, {0, 3}}, "bbbb"), new int[] {4, 2, 1, 1});
+        Assert.assertArrayEquals(countSubTrees(5, new int[][] {{0, 1}, {0, 2}, {1, 3}, {0, 4}}, "aabab"), new int[] {3, 2, 1, 1, 1});
+        Assert.assertArrayEquals(countSubTrees(6, new int[][] {{0, 1}, {0, 2}, {1, 3}, {3, 4}, {4, 5}}, "cbabaa"), new int[] {1, 2, 1, 1, 2, 1});
+        Assert.assertArrayEquals(countSubTrees(7, new int[][] {{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}}, "aaabaaa"), new int[] {6, 5, 4, 1, 3, 2, 1});
+        //error case
+        Assert.assertArrayEquals(countSubTrees(4, new int[][] {{0, 2}, {0, 3}, {1, 2}}, "abbe"), new int[] {1, 1, 2, 1});
     }
 }
