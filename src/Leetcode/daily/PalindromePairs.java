@@ -1,53 +1,60 @@
-package Leetcode;
+package Leetcode.daily;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
- * @author sam
- * @date 11/13/19 16:36
+ * 336. 回文对
+ * 给定一组唯一的单词， 找出所有不同 的索引对(i, j)，使得列表中的两个单词， words[i] + words[j] ，可拼接成回文串。
+ * <p>
+ * 示例 1:
+ * <p>
+ * 输入: ["abcd","dcba","lls","s","sssll"]
+ * 输出: [[0,1],[1,0],[3,2],[2,4]]
+ * 解释: 可拼接成的回文串为 ["dcbaabcd","abcddcba","slls","llssssll"]
+ * 示例 2:
+ * <p>
+ * 输入: ["bat","tab","cat"]
+ * 输出: [[0,1],[1,0]]
+ * 解释: 可拼接成的回文串为 ["battab","tabbat"]
+ * <p>
+ * 来源：力扣（LeetCode）
+ * 链接：https://leetcode-cn.com/problems/palindrome-pairs
+ * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+ *
+ * @date 08/06/20 9:10
  */
-public class FindWords {
-    public List<String> solution(char[][] board, String[] words) {
-        Trie trie = new Trie();
-        for (String word : words) {
-            trie.insert(word);
-        }
-        Set<String> ans = new HashSet<>();
-        int x_len = board.length;
-        int y_len = board[0].length;
-        find(board, trie, ans, x_len, y_len);
-        return new ArrayList<>(ans);
+public class PalindromePairs {
+    // 暴力解法  超时
+    // public List<List<Integer>> palindromePairs(String[] words) {
+    //     List<List<Integer>> ans = new ArrayList<>();
+    //     for (int i = 0; i < words.length; i++) {
+    //         for (int j = 0; j < words.length; j++) {
+    //             if (i != j && isPalindrome(words[i] + words[j])) {
+    //                 ans.add(Arrays.asList(i, j));
+    //             }
+    //         }
+    //     }
+    //     return ans;
+    // }
+    //
+    // private boolean isPalindrome(String word) {
+    //     for (int start = 0, end = word.length() - 1; start < end; start++, end--) {
+    //         if (word.charAt(start) != word.charAt(end)) {
+    //             return false;
+    //         }
+    //     }
+    //     return true;
+    // }
+    //字典树
+    public List<List<Integer>> palindromePairs(String[] words) {
+        Trie trie =new Trie();
+        return null;
     }
 
-    private void find(char[][] board, Trie trie, Set<String> ans, int x_len, int y_len) {
-        for (int x = 0; x < x_len; x++) {
-            for (int y = 0; y < y_len; y++) {
-                find(board, x, y, ans, x_len, y_len, trie.root);
-            }
-        }
-    }
-
-    private void find(char[][] board, int x, int y, Set<String> ans, int x_len, int y_len, Node node) {
-        if (x >= 0 && y >= 0 && x < x_len && y < y_len && board[x][y] != '#' && node.containsKey(board[x][y])) {
-            char origin = board[x][y];
-            board[x][y] = '#';
-            node = node.get(origin);
-            if (node.isEnd()) {
-                ans.add(node.word);
-            }
-            find(board, x - 1, y, ans, x_len, y_len, node);
-            find(board, x + 1, y, ans, x_len, y_len, node);
-            find(board, x, y - 1, ans, x_len, y_len, node);
-            find(board, x, y + 1, ans, x_len, y_len, node);
-
-            board[x][y] = origin;
-
-        }
-
-    }
 
     private class Trie {
 
@@ -58,7 +65,6 @@ public class FindWords {
          */
         public Trie() {
             root = new Node();
-
         }
 
         /**
@@ -73,7 +79,6 @@ public class FindWords {
                 node = node.get(c);
             }
             node.setEnd();
-            node.setWord(word);
         }
 
 
@@ -127,7 +132,6 @@ public class FindWords {
 
         private boolean isEnd;
 
-        private String word;
 
         public Node() {
             children = new Node[R];
@@ -153,14 +157,15 @@ public class FindWords {
             return isEnd;
         }
 
-        public String getWord() {
-            return word;
-        }
-
-        public void setWord(String word) {
-            this.word = word;
-        }
     }
 
-
+    @Test
+    public void test() {
+        List<List<Integer>> ans = new ArrayList<>();
+        ans.add(Arrays.asList(0, 1));
+        ans.add(Arrays.asList(1, 0));
+        ans.add(Arrays.asList(3, 2));
+        ans.add(Arrays.asList(2, 4));
+        Assert.assertEquals(palindromePairs(new String[] {"abcd", "dcba", "lls", "s", "sssll"}), ans);
+    }
 }
