@@ -11,7 +11,7 @@ import java.util.concurrent.Semaphore;
 public class SemaphoreSample {
     public static void main(String[] args) {
         ExecutorService threadPool = Executors.newCachedThreadPool();
-        Semaphore semaphore = new Semaphore(1);//定义5个许可证，也就是说服务器只允许5个人在里面玩
+        Semaphore semaphore = new Semaphore(1);//定义1个许可证，也就是说服务器只允许1个人在里面玩
         for (int i = 1; i <= 3; i++) {
             final int index = i;
             threadPool.execute(new Runnable() {
