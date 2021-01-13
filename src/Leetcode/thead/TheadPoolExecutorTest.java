@@ -1,7 +1,12 @@
 package Leetcode.thead;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -132,6 +137,57 @@ public class TheadPoolExecutorTest {
     private void beforeExecute() {
         System.out.println("beforeExecute");
 
+    }
+
+    private ExecutorService executorService;
+
+    @Test
+    public void testDeadLock() throws IOException {
+        ExecutorService executorService = Executors.newFixedThreadPool(2, Thread::new);
+        this.executorService = executorService;
+        List<CompletableFuture<Void>> futureList = new ArrayList<>();
+        for (int i = 1; i <= 2; i++) {
+            CompletableFuture<Void> future = CompletableFuture.runAsync(new DeadLockTask(String.valueOf(i)), executorService);
+            futureList.add(future);
+        }
+        CompletableFuture<Void> combinedFuture = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[] {}));
+        combinedFuture.join();
+    }
+
+    class DeadLockTask implements Runnable {
+        private String name;
+
+        public DeadLockTask(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(1000);
+                System.out.println(this.toString() + " is running!");
+                List<CompletableFuture<Void>> futureList = new ArrayList<>();
+                for (int i = 1; i <= 2; i++) {
+                    CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                        System.out.println("This is inner thread of " + getName());
+                    }, executorService);
+                    futureList.add(future);
+                }
+                CompletableFuture<Void> combinedFuture = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[] {}));
+                combinedFuture.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public String toString() {
+            return "DeadLockTask [name=" + name + "]";
+        }
     }
 
 }

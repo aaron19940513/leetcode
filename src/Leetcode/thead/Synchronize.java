@@ -5,12 +5,34 @@ package Leetcode.thead;
  */
 public class Synchronize {
     public static void main(String[] args) {
-        synchronized (Synchronize.class) {
-            System.out.println("Synchronize");
-            System.out.println(Integer.toBinaryString(Integer.MAX_VALUE));
-            System.out.println(Integer.toBinaryString(-1));
-
-            System.out.println(Integer.toBinaryString(-1<<(Integer.SIZE - 3)));
+        Widget widget = new Widget();
+        widget.start();
+        for (; ; ) {
+            if (!widget.getFlag()) {
+                System.out.println(widget.getFlag());
+            }
         }
+
+    }
+}
+
+
+class Widget extends Thread {
+
+    private volatile Boolean flag = true;
+
+    public Boolean getFlag() {
+        return flag;
+    }
+
+    @Override
+    public void run() {
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        flag = false;
+        System.out.println("flag has change to false");
     }
 }
