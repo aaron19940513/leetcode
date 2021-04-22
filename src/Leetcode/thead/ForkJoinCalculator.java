@@ -11,7 +11,7 @@ import java.util.stream.LongStream;
  */
 public class ForkJoinCalculator implements Calculator {
 
-    private ForkJoinPool pool;
+    private static ForkJoinPool pool;
 
     //执行任务RecursiveTask：有返回值  RecursiveAction：无返回值
     private static class SumTask extends RecursiveTask<Long> {
@@ -28,8 +28,9 @@ public class ForkJoinCalculator implements Calculator {
         //此方法为ForkJoin的核心方法：对任务进行拆分  拆分的好坏决定了效率的高低
         @Override
         protected Long compute() {
+            System.out.println(pool.getQueuedTaskCount());
             // 当需要计算的数字个数小于6时，直接采用for loop方式计算结果
-            if (to - from < 6) {
+            if (to - from < 10) {
                 long total = 0;
                 for (int i = from; i <= to; i++) {
                     total += numbers[i];
@@ -60,7 +61,7 @@ public class ForkJoinCalculator implements Calculator {
     }
 
     public static void main(String[] args) {
-        long[] numbers = LongStream.rangeClosed(1, 20).toArray();
+        long[] numbers = LongStream.rangeClosed(1, 200000).toArray();
 
         Instant start = Instant.now();
         Calculator calculator = new ForkJoinCalculator();
