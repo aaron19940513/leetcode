@@ -53,7 +53,8 @@ public class MedianSlidingWindow {
             int j;
             for (j = 0; j < arr.length; j++) {
                 if (arr[j] == nums[head]) {
-                    arr[j] = nums[k];
+                    arr[j] = nums[i];
+                    break;
                 }
             }
             insertSort(arr, j);
@@ -72,21 +73,20 @@ public class MedianSlidingWindow {
                     arr[i - 1] = arr[i];
                 } else {
                     arr[i - 1] = flag;
+                    break;
                 }
-
                 if (i == arr.length - 1) {
                     arr[i] = flag;
                 }
-
             }
-        } else if (j - 1 > 0 && arr[j - 1] > arr[j]) {
-            for (int i = j - 1; i >= 0; i++) {
-                if (flag > arr[i]) {
+        } else if (j - 1 >= 0 && arr[j - 1] > arr[j]) {
+            for (int i = j - 1; i >= 0; i--) {
+                if (flag < arr[i]) {
                     arr[i + 1] = arr[i];
                 } else {
                     arr[i + 1] = flag;
+                    break;
                 }
-
                 if (i == 0) {
                     arr[i] = flag;
                 }
@@ -96,7 +96,7 @@ public class MedianSlidingWindow {
 
     private double median(int[] arr) {
         if (arr.length % 2 == 0) {
-            return (double) (arr[(arr.length) / 2] + arr[(arr.length) / 2 - 1]) / (double) 2;
+            return ((double) arr[(arr.length) / 2] + (double) arr[(arr.length) / 2 - 1]) / (double) 2;
         } else {
             return arr[(arr.length - 1) / 2];
         }
@@ -104,6 +104,14 @@ public class MedianSlidingWindow {
 
     @Test
     public void test() {
-        Assert.assertEquals(new double[] {1, -1, -1, 3, 5, 6}, medianSlidingWindow(new int[] {1, 3, -1, -3, 5, 3, 6, 7}, 3));
+        Assert.assertArrayEquals(new double[] {1, -1, -1, 3, 5, 6}, medianSlidingWindow(new int[] {1, 3, -1, -3, 5, 3, 6, 7}, 3), 0.001);
+        Assert.assertArrayEquals(new double[] {2, 3, 3, 3, 4, 4.5}, medianSlidingWindow(new int[] {1, 3, -1, 3, 5, 3, -5, 6, 7}, 4), 0.001);
+
+    }
+
+    @Test
+    public void errorCase() {
+        Assert.assertArrayEquals(new double[] {2147483647.00000}, medianSlidingWindow(new int[] {2147483647, 2147483647}, 2), 0.001);
+
     }
 }
