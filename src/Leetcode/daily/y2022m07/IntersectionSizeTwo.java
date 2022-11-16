@@ -39,7 +39,7 @@ public class IntersectionSizeTwo {
         //右端点升序，左端点降序
         Arrays.sort(intervals, (o1, o2) -> {
             if (o1[1] == o2[1]) {
-                return o2[0] - o2[1];
+                return o2[0] - o1[0];
             }
             return o1[1] - o2[1];
         });

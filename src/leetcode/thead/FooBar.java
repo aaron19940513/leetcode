@@ -141,8 +141,6 @@ public class FooBar {
         futureList.add(second);
         CompletableFuture combinedFuture = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[] {}));
         combinedFuture.join();
-
-
     }
 
 }

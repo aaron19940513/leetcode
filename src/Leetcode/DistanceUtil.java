@@ -110,8 +110,8 @@ public class DistanceUtil {
 
     @Test
     public void test(){
-        System.out.println(calcDistance(104.075005,30.543238,104.086418,30.541872));
-        System.out.println(calcDistanceM(104.075005,30.543238,104.086418,30.541872));
+        System.out.println(calcDistance(103.98392958765675,30.562504401581513,104.07483954485,30.544562613448));
+        System.out.println(calcDistanceM(103.98392958765675,30.562504401581513,104.07483954485,30.544562613448));
     }
 
     @Test
